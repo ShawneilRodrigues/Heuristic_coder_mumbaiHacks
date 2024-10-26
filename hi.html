@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Footprint Analyzer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.1/plotly.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .results-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .recommendation-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+            transition: transform 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            transform: translateX(10px);
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chart {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .impact-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .impact-low {
+            background: #dff0d8;
+            color: #3c763d;
+        }
+
+        .impact-medium {
+            background: #fcf8e3;
+            color: #8a6d3b;
+        }
+
+        .impact-high {
+            background: #f2dede;
+            color: #a94442;
+        }
+
+        .error-message {
+            display: none;
+            background: #f2dede;
+            color: #a94442;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Carbon Footprint Analyzer</h1>
+            <p>Track and analyze the environmental impact of your purchases</p>
+        </header>
+
+        <div class="input-section">
+            <div class="error-message"></div>
+            <div class="form-group">
+                <label for="product">Product Name</label>
+                <input type="text" id="product" placeholder="Enter product name" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" required>
+                    <option value="">Select a category</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Food">Food</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Home">Home</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount ($)</label>
+                <input type="number" id="amount" min="0" step="0.01" placeholder="Enter amount" required>
+            </div>
+            <button onclick="analyzeFootprint()">Analyze Carbon Footprint</button>
+        </div>
+
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Analyzing your purchase...</p>
+        </div>
+
+        <div class="results-section">
+            <div class="impact-badge"></div>
+            <h2>Analysis Results</h2>
+            <div id="footprint-result"></div>
+            <div id="recommendations"></div>
+            <div class="charts-container">
+                <div class="chart" id="time-series"></div>
+                <div class="chart" id="category-breakdown"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function analyzeFootprint() {
+            const product = document.getElementById('product').value;
+            const category = document.getElementById('category').value;
+            const amount = document.getElementById('amount').value;
+
+            if (!product || !category || !amount) {
+                showError('Please fill in all fields');
+                return;
+            }
+
+            // Show loading state
+            document.querySelector('.loading').style.display = 'block';
+            document.querySelector('.results-section').style.display = 'none';
+            document.querySelector('.error-message').style.display = 'none';
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        product,
+                        category,
+                        amount: parseFloat(amount)
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+
+                displayResults(data);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                document.querySelector('.loading').style.display = 'none';
+            }
+        }
+
+        function displayResults(data) {
+            const resultsSection = document.querySelector('.results-section');
+            resultsSection.style.display = 'block';
+
+            // Display impact badge
+            const impactBadge = document.querySelector('.impact-badge');
+            impactBadge.textContent = `Impact Level: ${data.predictions.impact_assessment}`;
+            impactBadge.className = `impact-badge impact-${data.predictions.impact_assessment.toLowerCase()}`;
+
+            // Display footprint
+            document.getElementById('footprint-result').innerHTML = `
+                <p><strong>Carbon Footprint:</strong> ${data.predictions.carbon_footprint} kg CO2</p>
+                <p><strong>Analysis:</strong> ${data.predictions.analysis}</p>
+                <p><strong>Potential Savings:</strong> ${data.predictions.potential_savings} kg CO2</p>
+            `;
+
+            // Display recommendations
+            const recommendationsHtml = data.predictions.recommendations
+                .map(rec => `
+                    <div class="recommendation-card">
+                        <p>${rec}</p>
+                    </div>
+                `)
+                .join('');
+            document.getElementById('recommendations').innerHTML = `
+                <h3>Recommendations</h3>
+                ${recommendationsHtml}
+            `;
+
+            // Update charts if available
+            if (data.visualizations) {
+                if (data.visualizations.time_series) {
+                    Plotly.newPlot('time-series', JSON.parse(data.visualizations.time_series));
+                }
+                if (data.visualizations.category_breakdown) {
+                    Plotly.newPlot('category-breakdown', JSON.parse(data.visualizations.category_breakdown));
+                }
+            }
+
+            // Smooth scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showError(message) {
+            const errorDiv = document.querySelector('.error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.querySelector('.loading').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
