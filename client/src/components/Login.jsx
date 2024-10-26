@@ -49,6 +49,7 @@ const Login = () => {
                     <input
                         type="email"
                         id="email"
+                        className='w-full'
                         required
                         value={formData.email}
                         onChange={handleChange}
@@ -59,6 +60,7 @@ const Login = () => {
                     <input
                         type="password"
                         id="password"
+                        className='w-full'
                         required
                         value={formData.password}
                         onChange={handleChange}

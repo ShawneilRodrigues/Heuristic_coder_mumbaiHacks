@@ -47,11 +47,11 @@ const Signup = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" required value={formData.email} onChange={handleChange} />
+                    <input type="email" id="email" className='w-full' required value={formData.email} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" required value={formData.password} onChange={handleChange} />
+                    <input type="password" id="password" className='w-full' required value={formData.password} onChange={handleChange} />
                 </div>
                 <button type="submit">Sign Up</button>
             </form>
