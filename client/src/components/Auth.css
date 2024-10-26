@@ -1,0 +1,71 @@
+/* Auth.css */
+.auth-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+.auth-container h2 {
+    text-align: center;
+    color: #2b8a3e; /* Dark green */
+    margin-bottom: 1.5rem;
+}
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.auth-container label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.auth-container input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.auth-container button {
+    padding: 0.75rem;
+    background-color: #2b8a3e; /* Dark green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.auth-container button:hover {
+    background-color: #a9e63d; /* Vibrant green */
+}
+
+.switch-auth {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.switch-auth a {
+    color: #2b8a3e; /* Dark green */
+    text-decoration: underline;
+}
+
+.switch-auth a:hover {
+    color: #a9e63d; /* Vibrant green */
+}
+label{
+    display: inline-block;
+    width: 30%;
+}

@@ -1,0 +1,12 @@
+.mainpage {
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-image: url("./img.webp");
+  background-color: rgb(217, 206, 191);
+  /* background: linear-gradient(135deg, #a9e63d, #ff7e5f, #6a82fb),url("./img.webp"); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
