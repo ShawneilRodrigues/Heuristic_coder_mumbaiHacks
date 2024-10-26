@@ -6,25 +6,33 @@ const ProductForm = () => {
   const [productName, setProductName] = useState('');
   const [productCost, setProductCost] = useState('');
   const [category, setCategory] = useState('food');
-  const [responseMessage, setResponseMessage] = useState(null);
+  const [responseMessage, setResponseMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const transactionData = {
-        userId: 'user123', // This should be dynamically set
-        name: productName,
-        price: productCost,
-        category: category,
+    
+    const data = {
+      productName,
+      productCost,
+      category,
     };
 
+    console.log('Submitting data:', data); // Log the data being sent
+
     try {
-        const response = await axios.post('http://localhost:5000/transactions', transactionData);
-        console.log('Transaction created:', response.data);
+      const response = await axios.post('https://320b-61-246-51-230.ngrok-free.app/analyze', data);
+      console.log('Response received:', response.data); // Log the response
+      setResponseMessage(response.data);
     } catch (error) {
-        console.error('Error creating transaction:', error);
+      console.error('Error submitting the product data:', error);
+      setResponseMessage('Error submitting data: ' + error.message); // Show error message
     }
-};
+
+    // Reset the form fields
+    setProductName('');
+    setProductCost('');
+    setCategory('food');
+  };
 
   return (
     <div>
